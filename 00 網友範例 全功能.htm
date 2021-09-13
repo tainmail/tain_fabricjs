@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>CodePen - fabric.js canvas 庫</title>
+
+	<style>
+		body {
+			padding: 10px;
+		}
+
+		canvas {
+			border: 1px solid #000;
+		}
+	</style>
+
+</head>
+
+<body>
+	<!-- partial:index.partial.html -->
+	<canvas id="cas"></canvas>
+	<p><img width="50" id="my-image" src="https://s.cdpn.io/profiles/user/2299556/80.jpg" alt=""></p>
+	<button onclick="setImg()"> 讀取圖片地址，設置畫布背景</button>
+	<button onclick="imgAdd1()"> 添加圖片(id)</button>
+	<button onclick="imgAdd2()"> 添加圖片(url)</button>
+	<button onclick="addTextbox()"> 添加文字</button>
+	<button onclick="setAngle(10)"> 旋轉10</button>
+	<button onclick="setAngle(-10)"> 旋轉-10</button>
+	<button onclick="scaleX()"> 翻轉圖層X</button>
+	<button onclick="scaleY()"> 翻轉圖層Y</button>
+	<button onclick="remove()"> remove</button>
+	<button onclick="bringForward()"> 上移圖層bringForward</button>
+	<button onclick="sendBackwards()"> 下移圖層sendBackwards</button>
+
+	<button onclick="toJSON()"> 將畫佈導出toJSON</button>
+	<button onclick="canvasToImage()"> 將畫佈導出成圖片下載</button>
+	<button onclick="setbackcolor1()"> 畫布背景色1</button>
+	<button onclick="setbackcolor2()"> 畫布背景色2</button>
+	<button onclick="addelement()"> 添加 圖像(三角 圓 方...)</button>
+	<button onclick="clearAll()"> clearAll</button>
+	<button onclick="onDrawingMode()" id="onDrawingMode"> 打開畫筆</button>
+	<button onclick="addGroup()"> addgroup添加組合圖形</button>
+
+
+
+
+
+	<hr>
+	<code>
+<br>下移：canvas.sendBackwards(canvas.getActiveObject());
+<br>上移：canvas.bringForward(canvas.getActiveObject());
+<br>置頂：canvas.bringToFront(canvas.getActiveObject());
+<br>置底：canvas.sendToBack(canvas.getActiveObject());</code>
+	<!-- partial -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+	<script>
+		var card = new fabric.Canvas("cas", {
+			backgroundColor: "#fefefe", // 畫布背景色為藍色
+			isDrawingMode: false //設置是否可以繪製???
+		});
+		card.setZoom(1)
+
+		// 在畫布初始化後設置
+		card.preserveObjectStacking = true; // 禁止選中圖層時自定置於頂部????
+
+		card.setWidth(600);
+		card.setHeight(400);
+
+		// 讀取圖片地址，設置畫布背景
+		function setImg() {
+			// 方式一（通過img元素添加）
+
+			var img1 = document.createElement("img");
+			img1.onload = function () {
+				const imgInstance = new fabric.Image(img1, {
+					scaleX: card.width / img1.width,
+					scaleY: card.height / img1.height
+				});
+				card.setBackgroundImage(imgInstance, card.renderAll.bind(card));
+				// 添加對像後, 如下圖
+			};
+			img1.crossOrigin = "Anonymous";
+			//記得加上，不然會出現畫布污染（Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported）等錯誤
+			img1.src = "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2347348831,4245317090&fm=26&gp=0.jpg";
+		}
+		function setbackcolor1() {
+			card.backgroundColor = "blue";
+			card.renderAll();
+		}
+
+		function setbackcolor2() {
+			card.setBackgroundColor("#FF0");
+			card.renderAll();
+		}
+
+		/**
+		 * 如何向畫布添加一個Image對像？
+		 */
+		function imgAdd1() {
+			// 方式一（通過img元素添加）
+			// const imgElement = document.getElementById("my-image");
+
+			var img = document.createElement("img");
+			img.onload = function () {
+				const imgInstance = new fabric.Image(img, {
+					left: 100, // 圖片相對畫布的左側距離
+					top: 100, // 圖片相對畫布的頂部距離
+					angle: 30, // 圖片旋轉角度
+					opacity: 1, // 圖片透明度
+					// 這裡可以通過scaleX和scaleY來設置圖片繪製後的大小，這裡為原來大小的一半
+					scaleX: 0.25,
+					scaleY: 0.25
+				});
+				// 添加對像後, 如下圖
+				card.add(imgInstance);
+			};
+			img.crossOrigin = "Anonymous";
+			//記得加上，不然會出現畫布污染（Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported）等錯誤
+			img.src =
+				"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=160856206,831390008&fm=26&gp=0.jpg";
+		}
+
+		function imgAdd2() {
+			// 方式二（通過圖片路徑添加）
+			fabric.Image.fromURL(
+				"https://s.cdpn.io/profiles/user/2299556/80.jpg?1536541376",
+				img => {
+					img.set({
+						hasControls: true, // 是否開啟圖層的控件
+						borderColor: "orange" // 圖層控件邊框的顏色
+					});
+
+					// 添加對像後, 如下圖
+
+					card.add(img);
+				}
+			);
+
+			img.crossOrigin = "Anonymous"; //記得加上，不然會出現畫布污染（Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported）等錯誤
+		}
+
+		function addTextbox() {
+			/**
+			 * 如何向畫布添加一個Textbox對像？
+			 */
+
+			const textbox = new fabric.Textbox("這是一段文字", {
+				left: 50,
+				top: 50,
+				width: 150,
+				fontSize: 20, // 字體大小
+				fontWeight: 800, // 字體粗細
+				// fill: 'red', // 字體顏色
+				// fontStyle: 'italic',  // 斜體
+				// fontFamily: 'Delicious', // 設置字體
+				// stroke: 'green', // 描邊顏色
+				// strokeWidth: 3, // 描邊寬度
+				hasControls: false,
+				borderColor: "orange",
+				editingBorderColor: "blue" // 點擊文字進入編輯狀態時的邊框顏色
+			});
+			// 添加文字後，如下圖
+			card.add(textbox);
+		}
+
+		// 方式一
+		// this.selectedObj = card.getActiveObject(); // 返回當前畫布中被選中的圖層
+
+		// 方式二
+		card.on("mouse:down", e => {
+			// 選中圖層事件觸發時，動態更新賦值
+			this.selectedObj = e.target;
+			// console.log(e.target);
+		});
+
+		function setAngle(deg) {
+			// 順時針90°旋轉
+			const currAngle = this.selectedObj.angle; // 當前圖層的角度
+			const angle = currAngle === 360 ? deg : currAngle + deg;
+			this.selectedObj.rotate(angle);
+			// 如果是通過滑塊的方式控制旋轉
+			// this.selectedObj.rotate(slideValue);
+
+			// 所有圖層的操作之後，都需要調用這個方法
+			card.renderAll();
+		}
+
+		function scaleX() {
+			// 水平翻轉，同理垂直翻轉改為scaleY屬性
+			this.selectedObj.set({
+				scaleX: -this.selectedObj.scaleX
+			});
+
+			card.renderAll();
+		}
+		function scaleY() {
+			// 水平翻轉，同理垂直翻轉改為scaleY屬性
+			this.selectedObj.set({
+				scaleY: -this.selectedObj.scaleY
+			});
+
+			card.renderAll();
+		}
+		function remove() {
+			card.remove(this.selectedObj); // 傳入需要移除的object
+			card.renderAll();
+		}
+
+		function bringForward() {
+			// this.selectedObj = card.getActiveObject(); // 返回當前畫布中被選中的圖層
+			// this.selectedObj.bringForward();
+			// card.renderAll();
+			card.bringForward(card.getActiveObject());
+			// this.selectedObj.moveTo(card, 11);
+		}
+		function sendBackwards() {
+			// this.selectedObj = card.getActiveObject(); // 返回當前畫布中被選中的圖層
+			// this.selectedObj.sendBackwards();
+			// canvas.getActiveObject()
+			card.sendBackwards(card.getActiveObject());
+			// card.renderAll();
+			// this.selectedObj.moveTo(card, 1);
+		}
+
+		function toJSON() {
+			var toJSON = card.toJSON()
+
+			console.log(toJSON);
+			// $("#my-image").attr("src", dataURL);
+		}
+
+		//canvas導出為圖片並下載;
+		function canvasToImage() {
+
+			var MIME_TYPE = "image/png";
+			//轉換成base64
+
+
+			// card.setWidth(3000);
+			// card.setHeight(2000);
+			// card.setZoom(5)
+
+
+			var imgURL = card.toDataURL({
+				format: "png", // jpeg或png
+				quality: 0.8 // 圖片質量，僅jpeg時可用
+				// 截取指定位置和大小
+				// left: 100,
+				// top: 100,
+				// width: 200,
+				// height: 200
+			}); //創建一個a鏈接，模擬點擊下載
+			// console.log(imgURL);
+			var dlLink = document.createElement("a");
+			var filename = "個人畫板_" + new Date().getTime() + ".png";
+			dlLink.download = filename;
+			dlLink.href = imgURL;
+			dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(
+				":"
+			);
+			document.body.appendChild(dlLink);
+			dlLink.click();
+			document.body.removeChild(dlLink);
+		}
+
+		function addelement() {
+			var circle = new fabric.Circle({
+				radius: 20,
+				fill: "green",
+				left: 100,
+				top: 100
+			});
+
+			circle.setGradient("fill", {
+				x1: 0,
+				y1: 0,
+				x2: circle.width,
+				y2: 0,
+				colorStops: {
+					0: "red",
+					0.2: "orange",
+					0.4: "yellow",
+					0.6: "green",
+					0.8: "blue",
+					1: "purple"
+				}
+			});
+			var triangle = new fabric.Triangle({
+				width: 20,
+				height: 30,
+				fill: "blue",
+				left: 50,
+				top: 50
+			});
+			var Rect = new fabric.Rect({
+				width: 55,
+				height: 55,
+				fill: "green",
+				left: 200,
+				top: 200
+			});
+			card.add(circle, triangle, Rect);
+
+			// 畫不規則的線
+			var path = new fabric.Path("M 0 0 L 200 100 L 170 200 z");
+
+			// path.set({ left: 120, top: 120, fill: "red" });
+
+			card.add(path);
+		}
+
+		function clearAll() {
+			console.log("清除數據");
+			card.clear().renderAll();
+
+		}
+
+		function onDrawingMode() {
+			if (card.isDrawingMode == true) {
+				card.isDrawingMode = false;
+				$("#onDrawingMode").html("打開畫筆");
+			} else {
+				card.isDrawingMode = true;
+				$("#onDrawingMode").html("關閉畫筆");
+			}
+		}
+
+		// 按鍵盤 ⬅刪除
+		delSelected();
+		function delSelected() {
+			var that = this;
+			card.on("mouse:down", function (options) {
+				if (options.target) {
+					document.onkeydown = function (e) {
+						if (e.keyCode == 8) {
+							that.card.remove(options.target);
+						}
+					};
+				}
+			});
+		}
+		// addGroup()
+		function addGroup() {
+			var circle1 = new fabric.Circle({
+				radius: 20,
+				fill: "green",
+				left: 100,
+				top: 100
+				// originX: 'center',
+				// originY: 'center',
+			});
+			var circle2 = new fabric.Circle({
+				radius: 10,
+				fill: "red",
+				left: 100,
+				top: 100
+				// originX: 'center',
+				// originY: 'center',
+			});
+			group = new fabric.Group([circle1, circle2], {
+				originX: "center",
+				originY: "center"
+			});
+
+			card.add(group);
+			group.on("selected", function () {
+				console.log("selected");
+			});
+
+			group.animate("angle", 360, {
+				onChange: card.renderAll.bind(card)
+			});
+			group.animate("left", "+=200", { onChange: card.renderAll.bind(card) });
+			group.animate("top", "+=200", {
+				onChange: card.renderAll.bind(card),
+				duration: 1000,
+				easing: fabric.util.ease.easeOutBounce
+			});
+		}
+
+		card.on("object:rotating", function () {
+			console.log('rotating')
+		});
+		card.on("object:moving", function () {
+			console.log('object:moving')
+		});
+		card.on("object:removed", function () {
+			console.log('object:removed')
+		});
+		card.on("mouse:up", function (e) {
+			console.log("mouse:up");
+			// console.log(e);
+		});
+		card.on("mouse:down", function (e) {
+			console.log("mouse:down");
+		});
+	</script>
+
+</body>
+
+</html>

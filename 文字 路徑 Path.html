@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CodePen - Curved text - Fabricjs example 1</title>
+	<style>
+		canvas{ border:2px solid #000; }
+		.canvas-container{ margin:auto; }
+	</style>
+</head>
+<body>
+	<h1>文字 路徑 Path</h1>
+	<canvas id="canvas" width="450" height="400"></canvas>
+	
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js'></script>
+	<script>
+		var canvas = new fabric.Canvas('canvas');
+		var path = new fabric.Path('M 0 0 A 20 20 0 0 1 300 0');
+		var text = new fabric.Text('總部呼吸今天地下一次相媒體我要。', {
+			path: path,
+			fontSize: 30,
+			left: 80,
+			top: 130
+		});
+		canvas.add(text);
+	</script>
+</body>
+</html>

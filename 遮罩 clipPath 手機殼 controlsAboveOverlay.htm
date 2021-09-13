@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>遮罩 clipPath 手機殼 controlsAboveOverlay</h1>
+	<p>myFabric.controlsAboveOverlay = true; //編輯把手在最上層</p>
+	<p>fillRule: "evenodd" //svg填色模式 nonzero聯集預設 evenodd差集 </p>
+	<p>myFabric.clipPath = myPath; //遮罩 svg clipPath </p>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+				
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+			//backgroundImage: "https://placem.at/thing?w=414&h=736&txt=BG414x736&random=20", //背景圖片 會報錯
+		});
+
+		//編輯框的樣式
+		fabric.Object.prototype.set({
+			//hasControls:false, //不能編輯
+			//selectable:false,//是否被選取
+			borderColor: "rgba(255,255,255,.7)", //編輯框色
+			borderOpacityWhenMoving:.2, //編輯框 移動中 透明度
+			borderScaleFactor:2, //編輯框寬
+			borderDashArray: [10, 5], //編輯框虛線
+			padding:10,//編輯框內距
+			transparentCorners: false, //false 編輯把手才能填滿
+			cornerColor:"#000",//編輯把手
+			cornerStrokeColor: "#fff", // 控制點邊框色
+			cornerSize:10, //編輯把手,
+			//cornerStyle: "circle" //編輯把手 圓形
+		});
+
+		myFabric.controlsAboveOverlay = true;//編輯把手在最上層
+
+		var myPath = new fabric.Path('M 162.824 27 L 337.176 27 C 349.359 27 359.25 36.891 359.25 49.074 L 359.25 450.926 C 359.25 463.109 349.359 473 337.176 473 L 162.824 473 C 150.641 473 140.75 463.109 140.75 450.926 L 140.75 49.074 C 140.75 36.891 150.641 27 162.824 27 Z  M 190.041 66 C 200.046 66 208.168 74.206 208.168 84.312 L 208.168 141.688 C 208.168 151.794 200.046 160 190.041 160 C 180.037 160 171.915 151.794 171.915 141.688 L 171.915 84.312 C 171.915 74.206 180.037 66 190.041 66 Z');
+		
+		myPath.set({ fill: "red", fillRule: "evenodd" }); //svg填色模式 nonzero聯集預設 evenodd差集 
+		myFabric.add(myPath);
+		myFabric.centerObject(myPath);
+
+		const elImg = document.createElement('img')
+		elImg.src = "https://placem.at/thing?w=400&h=600&txt=假圖&random=80"
+		elImg.onload = () => {
+			const myPic = new fabric.Image(elImg, {
+				left:10,
+				top:300,
+			});
+			myPic.scaleToWidth(300); //等比縮放
+			myFabric.centerObject(myPic);
+			myFabric.add(myPic);
+			myFabric.clipPath = myPath; //遮罩 clipPath
+		}
+
+	});
+	</script>
+	
+</body>
+</html>

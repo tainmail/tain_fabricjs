@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>CodePen - fabric.js _ ori</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css?family=Pacifico|VT323|Quicksand|Inconsolata');
+		@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+		*{font-family:'Noto Sans TC','微軟正黑體';}
+
+		canvas {
+			border: 1px solid #999;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>文字 字型 fontfaceobserver 非同步 Promise.all</h1>
+	<p>本例字型@import檔放在檔案未端。</p>
+	<p>如果網路字型沒有 onload 造成 canvas 無法正常渲染字型。(微軟正黑體 本機字型無法監聽)</p>
+	<p>所以透過 fontfaceobserver 去監聽 @import @font-face 是否加載完成。</p>
+	<p>再進行fontFamily設定，再重渲染畫布。</p>
+	<p>https://github.com/xitu/gold-miner/blob/master/TODO/web-font-loading-patterns.md</p>
+	
+	<canvas id="c" width="600" height="300"></canvas>
+	<p>
+		Font-family: <select id="font-family"></select>
+	</p>
+
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.6.0/fabric.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.standalone.js'></script>
+	<script>
+		
+
+		// 字型列表
+		var fonts = [ "Pacifico", "Noto Sans TC", "VT323", "Quicksand", "Inconsolata"];
+
+		// Load all fonts using Font Face Observer
+		Promise.all(
+			fonts.map(font => new FontFaceObserver(font).load())
+		).then(function () {
+
+			// 產生畫布
+			var canvas = new fabric.Canvas('c');
+
+			// 產生選單
+			var select = document.getElementById("font-family");
+			fonts.forEach(function (font) {
+				var option = document.createElement('option');
+				option.innerHTML = font;
+				option.value = font;
+				select.appendChild(option);
+			});
+
+			// Add a Textbox using a custom font
+			var textbox = new fabric.Textbox('中文字 ABab12', {
+				left: 50,
+				top: 50,
+				width: 150,
+				fontFamily: 'Pacifico',
+				fontSize: 60,
+				fontWeight:900,
+			});
+			canvas.add(textbox).setActiveObject(textbox);
+
+			// Apply selected font on change
+			document.getElementById('font-family').onchange = function () {
+				canvas.getActiveObject().set("fontFamily", this.value);
+				canvas.requestRenderAll();
+			};
+
+		});
+	</script>
+
+</body>
+
+</html>

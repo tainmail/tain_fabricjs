@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#" />
+	<title>Document</title>
+	<style>
+		.canvas {
+			width: 1000px;
+			height: 1000px;
+			border: 1px solid Black;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>效能 requestRenderAll renderAll 比較</h1> 
+	<p>requestRenderAll 合并所有 render 请求。效能會比較好。</p>
+	<p>不過我是看不太出來</p>
+
+<pre>
+//renderAll 的 callback	
+obj.animate("angle", 360, {
+	onChange: myCanvas.renderAll.bind(myCanvas);
+});
+</pre>
+
+
+	<canvas id="canvas" class="canvas"></canvas>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.js"></script>
+
+	<script>
+		const canvas = new fabric.Canvas("canvas", {
+			width: 500,
+			height: 500,
+			selection: false,
+			centeredScaling: true,
+		});
+
+		const createLine = (index) => {
+			return new fabric.Line([index * 5, 0, 500 - index * 5, 500], {
+				stroke: "#000",
+				strokeWidth: 1,
+				fill: "#000"
+			});
+		};
+		const lines = [];
+		for (i = 0; i < 100; i++) {
+			lines.push(createLine(i));
+		}
+		const group = new fabric.Group(lines, {
+			selectable: false
+		});
+		canvas.add(group);
+
+		const cursor = new fabric.Rect({
+			stroke: "#000",
+			strokeWidth: 1,
+			fill: "red",
+			width: 50,
+			height: 50,
+			top: 0,
+			left: 0,
+			selectable: false
+		});
+		canvas.add(cursor);
+
+		canvas.on('mouse:move', (event) => {
+			const pointer = canvas.getPointer(event);
+			cursor.set({
+				top: pointer.y,
+				left: pointer.x,
+			});
+			canvas.requestRenderAll();
+			//canvas.renderAll();
+		})
+	</script>
+
+</body>
+
+</html>

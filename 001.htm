@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>輸出 截圖 存檔</h1>
+	<p>需要 localhost</p>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+
+				<button class="btn_jpg">截圖</button>
+			
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		const elPic = document.createElement('img')
+		elPic.src = "./images/dog.jpg"
+		elPic.onload = () => {
+			const myPic = new fabric.Image(elPic, {
+				width: 200,
+				height: 200,
+				left:0,
+				top:0,
+			});
+			myPic.scaleToHeight(736); //等比縮放
+			myFabric.add(myPic);
+			myFabric.centerObject(myPic); //置中物件 
+		}
+
+		function fnOutput3() {
+			var img = new Image();
+			img.src = myFabric.toDataURL('image/jpeg');
+			img.onload = function () {
+				var tmpImg; //待壓縮
+				var outputKb = 10; //目標壓縮 k數
+				var outputW = 414;
+				var outputH = 736;
+				var outputCompress = 102; //壓縮百分比
+				
+				//再畫上去
+				var context = myFabric.getContext("2d");
+				context.clearRect(0, 0, outputW, outputH);
+				context.drawImage(img, 0, 0, outputW, outputH);
+				
+				//當大於目標 k數 再縮一次
+				do {
+					outputCompress -= 2;
+					tmpImg = myFabric.toDataURL({ format: 'jpeg', quality: outputCompress / 100 });
+				} while (Math.round(0.75 * tmpImg.length / 1000) > outputKb);
+				//console.log(`檔案大約${(0.75 * tmpImg.length / 1000).toFixed(2)} kb`);
+				
+				//縮圖下載
+				const elA = document.createElement('a');
+				elA.href = tmpImg;
+				elA.download = `output_${new Date().getTime()}.jpg`;
+				elA.innerHTML = `<img style="width:100px; height:auto" src="${tmpImg}">`;
+				document.body.prepend(elA);
+				
+				//自動下載
+				elA.click();
+				document.body.removeChild(elA);
+			}
+		}
+
+		$(".btn_jpg").click(function(){
+			fnOutput3();
+		});
+
+	});
+
+	</script>
+	
+</body>
+</html>

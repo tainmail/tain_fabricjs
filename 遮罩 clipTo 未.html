@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>CodePen - FabricJS v1.5.0- clipTo()</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	.wrapper{ width:100%; max-width:1200px; margin:0 auto;  border:2px solid #333;}
+
+	#myCanvas{width: 500px; height:500px; border:2px solid green; }
+	</style>
+
+
+</head>
+
+<body>
+	<h1>遮罩 clipTo 未</h1>
+	<p>感覺用一個圓去蓋全部的元件</p>
+	<canvas id="myCanvas" style=" "></canvas>
+
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js'></script>
+	<script>
+		var myFabric = new fabric.Canvas("myCanvas", {
+			width: 400,
+			height: 400
+		});
+		var myCircle_1 = new fabric.Circle({
+			radius: 150,
+			stroke: '#f55',
+			fill: "gold",
+		});
+
+		myCircle_1.selectable = false;
+		myFabric.add(myCircle_1);
+		myFabric.renderAll();
+
+		myFabric.clipTo = function (ctx) {
+			myCircle_1.render(ctx); //
+		};
+
+		var text = new fabric.Text("Testing", {
+			fontSize: 150
+		});
+		myFabric.centerObject(text);
+		myFabric.add(text);
+		myFabric.renderAll();
+	</script>
+
+</body>
+
+</html>

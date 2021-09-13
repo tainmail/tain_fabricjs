@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>編輯 選取 維持堆疊順序 preserveObjectStacking</h1>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+				<label>
+					<input class="cb_1" type="checkbox"> 
+					維持元件堆疊的順序 <br>(預設false選到的會浮上來)
+				</label>
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		//編輯框的樣式
+		fabric.Object.prototype.set({
+			//hasControls:false, //不能編輯
+			//selectable:false,//是否被選取
+			borderColor: "rgba(255,255,255,.7)", //編輯框色
+			borderOpacityWhenMoving:.2, //編輯框 移動中 透明度
+			borderScaleFactor:2, //編輯框寬
+			borderDashArray: [10, 5], //編輯框虛線
+			padding:10,//編輯框內距
+			transparentCorners: false, //false 編輯把手才能填滿
+			cornerColor:"#000",//編輯把手
+			cornerStrokeColor: "#fff", // 控制點邊框色
+			cornerSize:10, //編輯把手,
+			//cornerStyle: "circle" //編輯把手 圓形
+		});
+
+		
+		//矩形
+		let myRect = new fabric.Rect({
+			left: 50,
+			top: 80,
+			width: 120,
+			height: 150,
+			opacity:.8, //透明度
+			fill: "gold", //填色,
+			stroke: "orangered",
+			strokeWidth: 5,
+			strokeDashArray:[10,5], //虛線
+		});
+		myFabric.add(myRect);
+
+		//矩形
+		let myRect2 = new fabric.Rect({
+			left: 100,
+			top: 120,
+			width: 120,
+			height: 150,
+			opacity:.8, //透明度
+			fill: "skyblue", //填色,
+			stroke: "orangered",
+			strokeWidth: 5,
+			strokeDashArray:[10,5], //虛線
+		});
+		myFabric.add(myRect2);
+
+		$(".cb_1").on("change", function(){
+			myFabric.preserveObjectStacking = $(this).prop("checked") //維持元件堆疊的順序
+			alert(`preserveObjectStacking=${$(this).prop("checked")}`)
+		});
+
+	});
+	</script>
+
+
+	
+
+
+
+	
+</body>
+</html>

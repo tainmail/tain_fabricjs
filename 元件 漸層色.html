@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>CodePen - fabricjs gradients</title>
+	<style>
+		canvas {
+			border: 1px solid #000;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>元件 漸層色</h1>
+	<p>https://ithelp.ithome.com.tw/articles/10204911</p>
+	<canvas id="canvas"></canvas>
+	<!-- partial -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.4.1/fabric.min.js'></script>
+	<script>
+		const canvas = new
+			//提供 canvas 的 id
+			fabric.Canvas('canvas', {
+				height: 600, // 讓畫布同視窗大小
+				width: 1000
+			});
+
+
+		const rect = new fabric.Rect({
+			width: 100,
+			height: 100,
+			top: 200,
+			left: 200,
+			fill: '#444'
+		});
+
+
+		const rect2 = new fabric.Rect({
+			width: 100,
+			height: 100,
+			top: 100,
+			left: 100,
+			fill: '#444'
+		});
+
+
+		const rect3 = new fabric.Rect({
+			width: 100,
+			height: 100,
+			top: 100,
+			left: 200,
+			fill: '#444'
+		});
+
+
+		const rect4 = new fabric.Rect({
+			width: 100,
+			height: 100,
+			top: 100,
+			left: 0,
+			fill: '#444'
+		});
+
+
+		const rect5 = new fabric.Rect({
+			width: 100,
+			height: 100,
+			top: 200,
+			left: 100,
+			fill: '#444'
+		});
+
+		// 漸層色
+		rect.setGradient('fill', {
+			x1: 0,
+			y1: 0,
+			x2: 0,
+			y2: rect.height,
+			colorStops: {
+				0: '#84fab0',
+				1: '#8fd3f4'
+			}
+		});
+
+
+
+		// 左右
+		rect2.setGradient('fill', {
+			x1: 0,
+			y1: 0,
+			x2: rect.width,
+			y2: 0,
+			colorStops: {
+				0: 'red',
+				0.2: 'orange',
+				0.4: 'yellow',
+				0.6: 'green',
+				0.8: 'blue',
+				1: 'purple'
+			}
+		});
+
+
+
+		// 斜角
+		rect3.setGradient('fill', {
+			x1: -50,
+			y1: -50,
+			x2: rect3.width,
+			y2: rect3.height,
+			colorStops: {
+				0: '#a18cd1',
+				1: '#fbc2eb'
+			}
+		});
+
+
+
+		rect4.setGradient('fill', {
+			type: 'radial',
+			r1: rect4.width / 2,
+			r2: 10,
+			x1: 0,
+			y1: 0,
+			x2: 0,
+			y2: 0,
+			colorStops: {
+				0: '#FF4F4F',
+				1: 'rgb(255, 239, 64)'
+			}
+		});
+
+
+
+		// 圓角
+		rect5.setGradient('fill', {
+			type: 'radial',
+			r1: 50,
+			r2: 10,
+			x1: 50,
+			y1: 50,
+			x2: 25,
+			y2: 25,
+			colorStops: {
+				0: '#a18cd1',
+				1: '#fbc2eb'
+			}
+		});
+
+
+
+		canvas.add(rect);
+		canvas.add(rect2);
+		canvas.add(rect3);
+		canvas.add(rect4);
+		canvas.add(rect5);
+	</script>
+
+</body>
+
+</html>

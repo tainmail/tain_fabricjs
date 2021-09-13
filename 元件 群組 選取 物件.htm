@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>編輯 全選 全不選 群組 解開</h1>
+	<p>http://fabricjs.com/manage-selection</p>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+				
+				<button class="btn_rect">新增方塊</button>
+				<button class="btn_obj_group">新增元件群組</button>
+				<br>
+				<button class="btn_select_all">全部選取</button>
+				<button class="btn_select_cancel">取消選取</button>
+				<br>
+				<button class="btn_group">群組</button>
+				<button class="btn_ungroup">解開群組</button>
+				<br>
+				
+				
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+
+	
+	<script>
+	function fnRandom(argMin, argMax){
+		return Math.round(argMin + Math.random()*(argMax - argMin));
+	};
+
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		//編輯框的樣式
+		fabric.Object.prototype.set({
+			//hasControls:false, //不能編輯
+			//selectable:false,//是否被選取
+			borderColor: "rgba(255,255,255,.7)", //編輯框色
+			borderOpacityWhenMoving:.2, //編輯框 移動中 透明度
+			borderScaleFactor:2, //編輯框寬
+			borderDashArray: [10, 5], //編輯框虛線
+			padding:10,//編輯框內距
+			transparentCorners: false, //false 編輯把手才能填滿
+			cornerColor:"#000",//編輯把手
+			cornerStrokeColor: "#fff", // 控制點邊框色
+			cornerSize:10, //編輯把手,
+			//cornerStyle: "circle" //編輯把手 圓形
+		});
+
+		//編輯把手 刪除功能
+		fabric.Textbox.prototype.controls.deleteControl = fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+			x: 0.5, //定位在右上
+			y: -0.5, //定位在右上
+			offsetY: -20, //微調
+			offsetX: 20, //微調
+			cursorStyle: "pointer",
+			cornerSize: 24,
+			//刪除圖標
+			render: function (ctx, left, top, styleOverride, fabricObject) {
+				if (!this.getVisibility(fabricObject)) return;
+				var deleteImg = document.createElement("img");
+				deleteImg.src = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
+				var size = this.cornerSize;
+				ctx.save();
+				ctx.translate(left, top);
+				ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+				ctx.drawImage(deleteImg, -size / 2, -size / 2, size, size);
+				ctx.restore();
+			}, 
+			//刪除當前
+			mouseUpHandler:function (eventData, transform) { 
+				let ta = transform.target;
+				let taCanvas = ta.canvas;
+				taCanvas.remove(ta);
+				taCanvas.requestRenderAll();
+			},
+		});
+				
+
+		//選取移到最上層
+		myFabric.on("selection:created", function(e) {
+			e.target.bringToFront();
+		});
+
+
+		//增加矩形
+		$(".btn_rect").click(function(){
+			fabric.util.loadImage(`https://placem.at/thing?w=400&h=400&txt=400x400&random=${fnRandom(1,80)}`, function(argImg){
+				const myPic = new fabric.Image(argImg, {
+					left: fnRandom(0, 300),
+					top: fnRandom(0, 500),
+				});
+				myPic.scaleToWidth(100); //等比縮放
+				myFabric.add(myPic);
+				myFabric.setActiveObject(myPic); //設為選取
+			});
+		}).trigger("click");
+
+
+		//增加元件群組
+		$(".btn_obj_group").click(function(){
+			var myCircle1 = new fabric.Circle({
+				radius: 50,
+				fill: "green",
+				left: 100,
+				top: 100
+			});
+			var myCircle2 = new fabric.Circle({
+				radius: 20,
+				fill: "blue",
+				left: 100,
+				top: 100
+			});
+			var myObjGroup = new fabric.Group([myCircle1, myCircle2], {
+				originX: "center",
+				originY: "center"
+			});
+
+			myFabric.add(myObjGroup);
+		})
+
+
+		//選取 群組
+		$(".btn_group").click(function(){
+			if (!myFabric.getActiveObject()) return;
+			if (myFabric.getActiveObject().type !== "activeSelection") return;
+
+			myFabric.getActiveObject().toGroup();
+			myFabric.requestRenderAll();
+		});
+
+		//取消 群組
+		$(".btn_ungroup").click(function(){
+			if (!myFabric.getActiveObject()) return;
+			if (myFabric.getActiveObject().type !== 'group')  return;
+			myFabric.getActiveObject().toActiveSelection();
+			myFabric.requestRenderAll();
+		});
+
+		//選取 全部
+		$(".btn_select_all").click(function(){
+			myFabric.discardActiveObject();
+			var sel = new fabric.ActiveSelection(myFabric.getObjects(), {
+				canvas: myFabric,
+			});
+			myFabric.setActiveObject(sel);
+			myFabric.requestRenderAll();
+		});
+
+		//選取 取消
+		$(".btn_select_cancel").click(function(){
+			myFabric.discardActiveObject();
+			myFabric.requestRenderAll();
+		});
+
+		
+
+		
+
+	});
+	</script>
+
+
+	
+
+
+
+	
+</body>
+</html>

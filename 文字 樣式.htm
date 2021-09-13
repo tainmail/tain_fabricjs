@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>8888</h1>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+				
+				<button class="btn_fontSize_dec">-</button>
+				<button class="btn_fontSize">fontSize</button>
+				<button class="btn_fontSize_inc">+</button>
+
+
+				<button class="btn_fontWeight">fontWeight</button>
+				<button class="btn_shadow">shadow</button>
+				<button class="btn_stroke">stroke</button>
+
+				<input class="colorPicker" type="color" value="#000000" >
+
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		//編輯框的樣式
+		fabric.Object.prototype.set({
+			//hasControls:false, //不能編輯
+			//selectable:false,//是否被選取
+			borderColor: "rgba(255,255,255,.7)", //編輯框色
+			borderOpacityWhenMoving:.2, //編輯框 移動中 透明度
+			borderScaleFactor:2, //編輯框寬
+			borderDashArray: [10, 5], //編輯框虛線
+			padding:10,//編輯框內距
+			transparentCorners: false, //false 編輯把手才能填滿
+			cornerColor:"#000",//編輯把手
+			cornerStrokeColor: "#fff", // 控制點邊框色
+			cornerSize:10, //編輯把手,
+			//cornerStyle: "circle" //編輯把手 圓形
+		});
+
+
+		let myTxt = new fabric.Textbox("🐕這是一隻狗\n汪汪叫!!", {
+			left:50,
+			top:50,
+			width:200,
+			height:200,
+			fontSize:50, //字尺寸
+			fontFamily:"Noto Sans TC", //字體 css
+			textAlign:"center", //置中
+			//lineHeight:2//行高倍
+			charSpacing:300, //字間
+			fontWeight: 300, //字粗
+			//fill: 'red', //字色
+			shadow:"5px 5px 10px #f00", //陰影
+			//fontStyle: 'italic',  //字斜
+			//stroke: 'pink', //字框
+			//strokeWidth: 3, //字框寬
+			//backgroundColor: 'yellow', //字螢光筆	
+			//underline: true, //下底線
+			//linethrough: true, //中畫線
+			//overline: true, //上邊線
+		});
+			
+		myFabric.add(myTxt);
+		myFabric.centerObject(myTxt); //置中物件 
+
+		//文字尺寸
+		$(".btn_fontSize").click(function(){
+			myTxt.set({fontSize:100});
+			myFabric.requestRenderAll(); //刷新
+		});
+
+		//文字變小
+		$(".btn_fontSize_dec").click(function(){
+			myTxt.set({fontSize:myTxt.fontSize - 10});
+			myFabric.requestRenderAll(); //刷新
+		});
+
+		//文字變小
+		$(".btn_fontSize_inc").click(function(){
+			myTxt.set({fontSize:myTxt.fontSize + 10});
+			myFabric.requestRenderAll(); //刷新
+		});
+
+
+		//字粗
+		$(".btn_fontWeight").click(function(){
+			myTxt.set({fontWeight:900});
+			myFabric.requestRenderAll(); //刷新
+		});
+
+		//字色
+		$(".colorPicker").change(function(){
+			myTxt.set({fill:$(this).val()});
+			myFabric.requestRenderAll(); //刷新
+		});
+
+		//陰影
+		$(".btn_shadow").click(function(){
+			myTxt.set({shadow:"purple 5px 5px 10px"});
+			myFabric.requestRenderAll(); //刷新
+		});
+
+		//框
+		$(".btn_stroke").click(function(){
+			myTxt.set({
+				fontSize:50,
+				strokeWidth: 2, // 邊框粗細
+  				stroke: "blue",
+				fontWeight:900
+			});
+			myFabric.requestRenderAll(); //刷新
+		});
+	
+
+	});
+	</script>
+	
+</body>
+</html>

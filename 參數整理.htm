@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	.wrapper{ width:100%; max-width:1200px; margin:0 auto;  border:2px solid #333;}
+        td{padding: 5px;}
+    </style>
+</head>
+<body>
+<table style="margin:0 auto;" width="1000" border="1">
+    <tbody>
+        <tr>
+            <td colspan="3" valign="top"><h2>Fabricjs</h2></td>
+        </tr>
+        <tr>
+            <td width="181" valign="top">&nbsp;</td>
+            <td width="636" valign="top">
+<pre>
+//寫法相同
+circle.set('fill', '#FFCC00');
+
+circle.set({
+    fill: 'black',
+    text: 'This is a circle'
+});
+</pre>            
+            </td>
+            <td width="161" valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top"><h2>元件</h2></td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Rect 矩形</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Line 線</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Circle 圓</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Triangle 三角</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Ellipse 楕圓</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Polyline 折線</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Polygon 多邊形</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Text 文字</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.IText 文字塊</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Image 圖片</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Path</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fabric.Group </td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top"><h2>元件屬性</h2></td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">backgroundColor</td>
+            <td valign="top">文件畫布背景色</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">height<br>
+            width</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">left<br>
+            top</td>
+            <td valign="top"><ul>
+                <li></li>
+            </ul></td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">angle</td>
+            <td valign="top">旋轉</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">fill</td>
+            <td valign="top">填色</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">stroke</td>
+            <td valign="top">框色</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">strokeWidth</td>
+            <td valign="top">框粗</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">strokeDashArray</td>
+            <td valign="top">虛線陣列</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">visible</td>
+            <td valign="top">是否出現在畫布</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">opacity</td>
+            <td valign="top">透明度</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="3" valign="top"><h2>編輯框屬性</h2></td>
+        </tr>
+        <tr>
+            <td valign="top">borderColor</td>
+            <td valign="top">編輯框 色</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">borderScaleFactor</td>
+            <td valign="top">編輯框 寬</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">padding</td>
+            <td valign="top">編輯框 內距</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">borderOpacityWhenMoving</td>
+            <td valign="top">編輯框 移動中 透明度</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">hasControls</td>
+            <td valign="top">編輯框 可使用 布林</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">cornerSize</td>
+            <td valign="top">編輯把手 大小</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">cornerColor</td>
+            <td valign="top">編輯把手 色</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">hasRotatingPoint</td>
+            <td valign="top">編輯把手 可旋轉 布林</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top"><h2>方法</h2></td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.set()</td>
+            <td valign="top">設定所有物件的預設屬性</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.bringForward()</td>
+            <td valign="top">上移一層z-index</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.sendBackwards() </td>
+            <td valign="top">後移一層 z-index</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.bringToFront()</td>
+            <td valign="top">最上層 z-index</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.sendToBack()</td>
+            <td valign="top">最底層 z-index</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.animate() </td>
+            <td valign="top">動畫</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.center() </td>
+            <td valign="top">canvas 正中心 (使用後須使用 setCoords() 將物件控制項一起移動到圖形上)</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.setCoords()</td>
+            <td valign="top">設定座標<br>
+            這個常用在我們變更物件位置時，控制項並未跟著改變</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">.setControlsVisibility()</td>
+            <td valign="top"><ul>
+                <li>哪些編輯把手要顯示
+                    <pre>
+setControlsVisibility({
+    bl: true, // 左下
+    br: true, // 右下
+    mb: false, // 下中
+    ml: true, // 中左
+    mr: true, // 中右
+    mt: true, // 上中
+    tl: true, // 上左
+    tr: false, // 上右
+    mtr: true // 旋轉控制鍵
+}</pre></li>
+            </ul></td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+    </tbody>
+</table>
+	
+</body>
+</html>

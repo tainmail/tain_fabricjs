@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>輸出 截圖 去邊</h1>
+	<p>需要 localhost</p>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+
+				
+				<button class="btn_jpg">截圖去邊</button>
+				
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		const elPic = document.createElement('img')
+		elPic.src = "./images/dog.jpg"
+		elPic.onload = () => {
+			const myImg = new fabric.Image(elPic, {
+				width: 200,
+				height: 200,
+				left:10,
+				top:100,
+			});
+			myFabric.add(myImg);
+		}
+
+		let myTxt = new fabric.Textbox("🐕這是一隻狗\n汪汪叫!!", {
+			left:50,
+			top:50,
+			width:200,
+			height:100,
+			fontSize:50, //字尺寸
+			fontFamily:"Noto Sans TC", //字體 css
+			textAlign:"center", //置中
+			fontWeight:800, //字粗
+			fill: "gold", //字色
+			shadow:"5px 5px 10px #000 ", //陰影
+		});
+			
+		myFabric.add(myTxt);
+
+		
+
+		//選取 z-index 移到上層
+		myFabric.on("selection:created", function(e) {
+			console.log(e);
+			e.target.bringToFront();
+		});
+
+		
+
+		function fnOutput2() {
+
+			//元件組成群組
+			var tmpGroup = new fabric.ActiveSelection(myFabric.getObjects(), {
+				canvas: myFabric,
+			});
+
+			//群組轉成64位元
+			const dataURL = tmpGroup.toDataURL({
+				format: "image/png", //副檔名
+				multiplier: 3, //輸出縮放倍率 0.5 輸出原本一半
+				quality: 0.9 //圖片的質量，範圍為 0~1
+			});
+
+			//預覽
+			window.open(dataURL, '_blank', 'scrollbars=yes'); 
+
+			//縮圖下載
+			const elA = document.createElement('a');
+			elA.href = dataURL;
+			elA.download = `output_${new Date().getTime()}.png`;
+			elA.innerHTML = `<img style="width:100px; height:auto; border:1px solid #333;" src="${dataURL}">`;
+			document.body.prepend(elA);
+
+			//自動下載
+			//elA.click();
+			//document.body.removeChild(elA);
+			
+		}
+
+		$(".btn_jpg").click(function(){
+			fnOutput2();
+		});
+
+
+
+	});
+	</script>
+
+
+	
+
+
+
+	
+</body>
+</html>

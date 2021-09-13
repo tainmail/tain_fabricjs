@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+
+	.gallery{ width:100%; max-width:1000px; height:100vh; margin:0 auto;  border:2px solid #333;}
+	</style>
+</head>
+<body>
+	<h1>動畫 分子 實體 callback</h1>
+
+	<div class="gallery">
+		<canvas id="myCanvas"></canvas>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+
+	<script>
+
+		function fnRandom(argMin, argMax){
+			return Math.round(argMin + Math.random()*(argMax - argMin));
+		};
+
+		let boxW = $(".gallery").innerWidth();
+		let boxH = $(".gallery").innerHeight();
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:boxW, //寬高
+			height:boxH, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		function fnGo(argCell){
+			argCell.animate(
+				{
+					left:fnRandom(0, boxW),
+					top:fnRandom(0, boxH)
+				},  
+				{
+					duration: fnRandom(300, 3000),
+					onChange(){
+						if(argCell.idx == count-1){ //最後一個才渲染
+							myFabric.renderAll(myFabric);
+						} 
+					},
+					onComplete(){
+						fnGo(argCell); //下一個循環
+					}
+				}
+			);
+		}
+
+		let count = 100;
+
+		for(let i=0; i<count; i++){
+			let myCell = new fabric.Circle({
+				radius:fnRandom(5, 30),
+				left:fnRandom(0, boxW),
+				top:fnRandom(0, boxH),
+				opacity:fnRandom(0, 100) / 100,
+			});
+
+			myCell.idx = i; //記錄編號
+			myFabric.add(myCell);
+			fnGo(myCell);
+		}
+	</script>
+
+	
+
+
+
+	
+</body>
+</html>

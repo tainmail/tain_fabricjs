@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:500px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>事件監聽 event.data</h1>
+	
+	<p>http://fabricjs.com/events</p>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+				<p>注意：mouse:over是監聽畫布 mouseover是監聽元件</p>
+				<h3>■ 畫布事件 Observing these events</h3>
+				<strong></strong>
+				<p>object:modified 畫布上有元件被修改</p>
+				<p>object:moving</p>
+				<p>object:scaling</p>
+				<p>object:rotating</p>
+				<p>object:skewing</p>
+				<p>object:moved</p>
+				<p>object:scaled</p>
+				<p>object:rotated</p>
+				<p>object:skewed</p>
+				<p>before:transform</p>
+				<p>before:selection:cleared</p>
+				<p>selection:cleared</p>
+				<p>selection:created</p>
+				<p>selection:updated</p>
+				<p>mouse:up</p>
+				<p>mouse:down</p>
+				<p>mouse:move</p>
+				<p>mouse:up:before</p>
+				<p>mouse:down:before</p>
+				<p>mouse:move:before</p>
+				<p>mouse:dblclick</p>
+				<p>mouse:wheel</p>
+				<p>mouse:over</p>
+				<p>mouse:out</p>
+				<p>drop</p>
+				<p>dragover</p>
+				<p>dragenter</p>
+				<p>dragleave</p>
+				<p>after:render</p>
+				
+				
+				<strong>Other available events</strong>
+				<p>"path:created"</p>
+				<p>"object:added"</p>
+				<p>"object:removed"</p>
+				
+				
+				<hr>
+				
+				<h3>■ 元件事件 Observing these events</h3>
+				<p>moving</p>
+				<p>scaling</p>
+				<p>rotating</p>
+				<p>skewing</p>
+				<p>moved</p>
+				<p>scaled</p>
+				<p>rotated</p>
+				<p>skewed</p>
+				<p>mouseup</p>
+				<p>mousedown</p>
+				<p>mousemove</p>
+				<p>mouseup:before</p>
+				<p>mousedown:before</p>
+				<p>mousemove:before</p>
+				<p>mousedblclick</p>
+				<p>mousewheel</p>
+				<p>mouseover</p>
+				<p>mouseout</p>
+				<p>drop</p>
+				<p>dragover</p>
+				<p>dragenter</p>
+				<p>dragleave</p>
+				<p>selected</p>
+				<p>deselected</p>
+				
+
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+	<!--taintestinfo 測試 開始--><script>$(function(){var fnTainTestInfo = (argClass, argAmount, argW, argPosH, argPosV) => {var sTxt = `<div class="${argClass}" style="width:${argW}px; height:auto; padding:10px; background-color:rgba(0, 0, 0, 0.5); position:fixed; ${argPosH}:0px; ${argPosV}:0px; z-index:1000;">${(()=>{var t = "";for(var i=0; i<argAmount; i++){t+=`<div class="${argClass}_${i}" style="border:1px solid #000; margin-bottom:5px; color:#fff;">--</div>`;} return t;})()}</div>`;$("body").append(sTxt);}
+	fnTainTestInfo("info", 4, 300, "right", "top"); // [容器名, 數量, 寬, 水平位置, 垂直位置]
+	$(".info_0").html("Tain Test Info");});</script>
+	<!--taintestinfo 測試 結束-->
+
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		//編輯框的樣式
+		let editingStyle = {
+			//hasControls:false, //不能編輯
+			//selectable:false,//是否被選取
+			borderColor: "rgba(255,255,255,.7)", //編輯框色
+			borderOpacityWhenMoving:.2, //編輯框 移動中 透明度
+			borderScaleFactor:2, //編輯框寬
+			borderDashArray: [10, 5], //編輯框虛線
+			padding:10,//編輯框內距
+			transparentCorners: false, //false 編輯把手才能填滿
+			cornerColor:"#000",//編輯把手
+			cornerStrokeColor: "#fff", // 控制點邊框色
+			cornerSize:10, //編輯把手,
+			//cornerStyle: "circle" //編輯把手 圓形
+		}
+
+		
+		//矩形
+		let myRect = new fabric.Rect({
+			left: 50,
+			top: 80,
+			width: 120,
+			height: 150,
+			opacity:.8, //透明度
+			fill: "gold", //填色,
+			stroke: "orangered",
+			strokeWidth: 5,
+			strokeDashArray:[10,5], //虛線
+		});
+		myRect.set(editingStyle);
+		myFabric.add(myRect);
+		myFabric.renderAll();
+
+		//矩形
+		let myRect2 = new fabric.Rect({
+			left: 50,
+			top: 150,
+			width: 100,
+			height: 180,
+			opacity:.8, //透明度
+			fill: "navy", //填色,
+			stroke: "skyblue",
+			strokeWidth: 5,
+			strokeDashArray:[10,5], //虛線
+		});
+		myRect2.set(editingStyle);
+		myFabric.add(myRect2);
+		myFabric.renderAll();
+
+		//選取 z-index 移到上層
+		myFabric.on("selection:created", function(e) {
+			console.log(e);
+			e.target.bringToFront();
+		});
+		
+
+		myFabric.on("mouse:move", (e)=>{
+			$(".info_0").html(`x:${e.pointer.y}, y:${e.pointer.y}`);
+		});
+
+		myFabric.on("mouse:down", (e)=>{
+			if(e.target){
+				$(".info_1").html(`畫布width:${e.target.canvas.width}, height:${e.target.canvas.height}`);
+				$(".info_2").html(`元件width:${e.target.width}, height:${e.target.height},<br/> left:${e.target.left.toFixed(2)},  top:${e.target.top.toFixed(2)}`);
+			}
+		});
+
+		myFabric.on("object:modified", e => {
+			$(".info_3").html(`元件scaleX:${e.target.scaleX.toFixed(2)}, scaleY:${e.target.scaleY.toFixed(2)}`);
+		})
+
+
+		myRect.on("mouseover", e => {
+			e.target.set({fill:"blue"});
+			myFabric.renderAll();
+		});
+
+		myRect.on("mouseout", e => {
+			e.target.set({fill:"gold"});
+			myFabric.renderAll();
+		});
+
+
+	});
+	</script>
+
+
+	
+
+
+
+	
+</body>
+</html>
