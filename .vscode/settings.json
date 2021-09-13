@@ -16,5 +16,10 @@
 		"titleBar.inactiveBackground": "#9acd3299",
 		"titleBar.inactiveForeground": "#15202b99"
 	},
-	"peacock.color": "yellowgreen"
+	"peacock.color": "yellowgreen",
+	
+	//排除隱藏檔案
+	"files.exclude": {
+		"**/.git": false, //true為隱藏
+	}
 }
