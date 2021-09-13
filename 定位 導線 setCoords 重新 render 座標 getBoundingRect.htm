@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>CodePen - Fabricjs grid</title>
+	<style>
+		canvas{ border:1px solid #000; }
+html,body{ width:100%; height:100%; }
+*{ margin:0; padding:0; box-sizing:border-box; }
+#controls{ position:fixed; top:150px; left:5px; }
+input{ width:100px; }
+
+	</style>
+</head>
+
+<body>
+	<h1>定位 setCoords 重新 render 座標</h1>
+	<p>https://ithelp.ithome.com.tw/articles/10207823</p>
+	<!-- partial:index.partial.html -->
+	<canvas id="canvas"></canvas>
+	<div id="controls">
+		間距: <input type="text" id="distanceInput"><button id="drawBtn">繪製</button>
+		<button id="addRectBtn">加入矩形</button>
+	</div>
+	<!-- partial -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.4.1/fabric.min.js'></script>
+	<script>
+		const $ = id => document.getElementById(id);
+		const drawBtn = $('drawBtn');
+		const distanceInput = $('distanceInput');
+		const addRectBtn = $('addRectBtn');
+		const canvas = new fabric.Canvas('canvas', {
+			width: window.innerWidth,
+			height: window.innerHeight
+		});
+
+		let distance = +distanceInput.value || 40;
+
+		//畫出導線
+		function drawGrid() {
+			canvas.clear();
+			const longer = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+			let vLine;
+			let hLine;
+			distance = +distanceInput.value || 40;
+			for (let i = 1; i * distance < longer; i++) {
+				const lineDef = {
+					fill: 'black',
+					stroke: 'rgba(0, 0, 0, 0.1)',
+					strokeWidth: 1,
+					selectable: false
+				};
+
+				// draw vLine
+				vLine = new fabric.Line([i * distance, 0, i * distance, canvas.height], lineDef);
+				// draw hLine
+				hLine = new fabric.Line([0, i * distance, canvas.width, i * distance], lineDef);
+
+				if (i % 5 === 0) {
+					vLine.stroke = 'rgba(0, 0, 0, 0.7)';
+					hLine.stroke = 'rgba(0, 0, 0, 0.7)';
+				}
+				canvas.add(vLine, hLine);
+			}
+		}
+
+		//加方塊
+		function addRect() {
+			let rect = new fabric.Rect({
+				width: distance,
+				height: distance,
+				top: distance * 5,
+				left: distance * 5,
+				cornerSize: 8,
+				transparentCorners: false
+			});
+
+			//吸住導線
+			rect.on('moving', e => {
+				const target = e.target;
+				target.left = Math.round(target.left / distance) * distance;
+				target.top = Math.round(target.top / distance) * distance;
+			});
+
+			//縮放
+			rect.on('scaled', e => {
+				const target = e.target;
+				const newRect = target.getBoundingRect(); 
+				//縮放是scale不是width 
+				//ta.getBoundingRect()取得目前縮放後的長寬和座標 
+				for (let key in newRect) {
+					newRect[key] = Math.round(newRect[key] / distance) * distance;
+				}
+				target.set({
+					scaleX: 1,
+					scaleY: 1,
+					width: newRect.width,
+					height: newRect.height,
+					left: newRect.left,
+					top: newRect.top
+				});
+
+				target.setCoords(); //改變長寬，所以要呼叫 setCoords()
+			});
+			rect.setControlVisible('mtr', false);
+			canvas.add(rect);
+		}
+
+
+		drawBtn.addEventListener('click', drawGrid);
+		addRectBtn.addEventListener('click', addRect);
+
+		drawGrid();
+	</script>
+
+</body>
+
+</html>
