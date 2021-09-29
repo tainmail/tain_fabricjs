@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<link rel="shortcut icon" href="#"/>
+	<title>Document</title>
+
+	<style>
+	@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+	*{font-family:'Noto Sans TC','微軟正黑體';}
+	*,*::before,*::after{margin:0px; padding:0px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;}
+	.clearfix:after{content:''; display:block; height:0; clear:both; visibility:hidden;}
+	hr{margin:20px 0px;}
+	pre{border:2px solid deeppink; padding:5px; margin:2px; font-size:12px; background:rgba(255,255,255,0.7); clear:both; font-size:12px; font-family:'Source Code Pro'; tab-size:4; -moz-tab-size:4; white-space:pre-wrap;}
+	pre strong{color:#CC0000;}
+	pre em{font-style:normal; font-weight:bold; color:#006600;}
+	button{ padding:5px 10px; }
+	.gallery{ width:100%; max-width:1000px; padding:10px;  margin:0 auto;  border:2px solid #333;
+	display:flex; flex-wrap:wrap; justify-content:space-between; align-content:flex-start;}
+
+	.gallery .col_1{ width:300px; padding:10px;  margin-right:20px;   background:#ccc; }
+
+	.gallery .col_2{ width:300px; padding:10px; background:#777; flex:1; }
+
+	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
+
+	</style>
+</head>
+<body>
+
+	<h1>元件 群組 解開群組</h1>
+	<p>https://ithelp.ithome.com.tw/articles/10205578</p>
+
+	<!--gallery 開始-->
+		<div class="gallery">
+			<!--col_1 開始-->
+			<div class="col_1">
+				
+				<button class="btn_group">group</button>
+				<button class="btn_unGroup">unGroup</button>
+			</div>
+			<!--col_1 結束-->
+	
+			<!--col_2 開始-->
+			<div class="col_2">
+				<canvas id="myCanvas"></canvas>
+			</div>
+			<!--col_2 結束-->
+		</div>
+		<!--gallery 結束-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
+
+	
+	<script>
+	$(function(){
+		let myFabric = new fabric.Canvas("myCanvas", {
+			width:414, //寬高
+			height:736, //寬高
+			backgroundColor: "yellowgreen", // 背景色
+		});
+
+		//編輯框的樣式
+		fabric.Object.prototype.set({
+			//hasControls:false, //不能編輯
+			//selectable:false,//是否被選取
+			borderColor: "rgba(255,255,255,.7)", //編輯框色
+			borderOpacityWhenMoving:.2, //編輯框 移動中 透明度
+			borderScaleFactor:2, //編輯框寬
+			borderDashArray: [10, 5], //編輯框虛線
+			padding:10,//編輯框內距
+			transparentCorners: false, //false 編輯把手才能填滿
+			cornerColor:"#000",//編輯把手
+			cornerStrokeColor: "#fff", // 控制點邊框色
+			cornerSize:10, //編輯把手,
+			//cornerStyle: "circle" //編輯把手 圓形
+		});
+
+		myFabric.preserveObjectStacking = true; //維持元件堆疊的順序 預設false選到的會浮上來
+
+
+		//狗的群組 =======================
+		let dogBody = new fabric.Rect({
+			height: 50,
+			width: 100,
+			fill: '#DDAA00'
+		});
+
+		let dogHead = new fabric.Rect({
+			height: 50,
+			width: 50,
+			left: 80,
+			fill: '#ce9e00'
+		});
+
+		let dogEarL = new fabric.Triangle({
+			height: 30,
+			width: 30,
+			left: 70,
+			top: -20,
+			angle: -15,
+			fill: '#ce9e00'
+		});
+
+		dogEarR = new fabric.Triangle({
+			height: 30,
+			width: 30,
+			left: 110,
+			top: -25,
+			angle: 15,
+			fill: '#ce9e00'
+		});
+
+		
+		let dogGroup = new fabric.Group([dogBody,dogHead,dogEarL,dogEarR], {
+			top: 100,
+			left: 100
+		});
+
+		//狗腿
+		for (let i = 0; i < 4; i++) {
+			dogGroup.add(new fabric.Rect({
+				height: 30,
+				width: 10,
+				fill: "darkred",
+				top: 30,
+				left:-70 + (30 * i)
+			}));
+		}
+
+		
+		// 建立我們組合好的 group
+		myFabric.add(dogGroup);
+
+
+
+		
+		//===========================
+		//群組
+		function fnGroup() {
+			myFabric.getActiveObject().toGroup();
+		}
+
+		//解開群組
+		function fnUnGroup() {
+			myFabric.getActiveObject().toActiveSelection();
+		}
+
+		$(".btn_group").click(function(){
+			fnGroup();
+		});
+
+		$(".btn_unGroup").click(function(){
+			fnUnGroup();
+		});
+
+
+
+		
+		// //矩形
+		// let myRect = new fabric.Rect({
+		// 	left: 50,
+		// 	top: 80,
+		// 	width: 120,
+		// 	height: 150,
+		// 	opacity:.8, //透明度
+		// 	fill: "gold", //填色,
+		// 	stroke: "orangered",
+		// 	strokeWidth: 5,
+		// 	strokeDashArray:[10,5], //虛線
+		// });
+		// myFabric.add(myRect);
+
+		// $(".btn_1").click(function(){
+		// 	myRect.set({fill: "purple"});
+		// 	myFabric.requestRenderAll();
+		// });
+
+	});
+	</script>
+
+
+	
+
+
+
+	
+</body>
+</html>
