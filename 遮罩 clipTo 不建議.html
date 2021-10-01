@@ -23,8 +23,8 @@
 </head>
 
 <body>
-	<h1>遮罩 clipTo 未</h1>
-	<p>感覺用一個圓去蓋全部的元件</p>
+	<h1>遮罩 clipTo</h1>
+	<p>clipTo是舊版的 建議用 clipPath</p>
 	<canvas id="myCanvas" style=" "></canvas>
 
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
@@ -34,26 +34,29 @@
 			width: 400,
 			height: 400
 		});
+		
+		//圓
 		var myCircle_1 = new fabric.Circle({
 			radius: 150,
-			stroke: '#f55',
+			stroke: "darkred",
 			fill: "gold",
 		});
-
-		myCircle_1.selectable = false;
 		myFabric.add(myCircle_1);
 		myFabric.renderAll();
 
+		//圓形遮罩
 		myFabric.clipTo = function (ctx) {
-			myCircle_1.render(ctx); //
+			myCircle_1.render(ctx);
 		};
 
-		var text = new fabric.Text("Testing", {
+		//字
+		var text = new fabric.Text("黑狗", {
 			fontSize: 150
 		});
-		myFabric.centerObject(text);
 		myFabric.add(text);
 		myFabric.renderAll();
+
+		
 	</script>
 
 </body>

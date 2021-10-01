@@ -29,16 +29,23 @@
 </head>
 <body>
 
-	<h1>元件 群組 解開群組</h1>
-	<p>https://ithelp.ithome.com.tw/articles/10205578</p>
+	<h1>編輯把手 禁止編輯</h1>
 
 	<!--gallery 開始-->
 		<div class="gallery">
 			<!--col_1 開始-->
 			<div class="col_1">
+
+				<label>
+					<input class="cb_hasControls" type="checkbox" checked> 
+					是否可以編輯 hasControls
+				</label>
+				<br>
+				<label>
+					<input class="cb_selectable" type="checkbox" checked> 
+					是否被選取(點空白處取消選取才看的出差別)
+				</label>
 				
-				<button class="btn_group">group</button>
-				<button class="btn_unGroup">unGroup</button>
 			</div>
 			<!--col_1 結束-->
 	
@@ -51,6 +58,7 @@
 		<!--gallery 結束-->
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
 
 	
@@ -61,6 +69,16 @@
 			height:736, //寬高
 			backgroundColor: "yellowgreen", // 背景色
 		});
+
+		//滑鼠圈選樣式
+		myFabric.set({
+			//selection:false, //拖曳圈選
+			selectionColor:"rgba(255,0,0,.5)", //拖曳圈選 顏色
+			selectionBorderColor:"rgba(0,0,0,.5)", //拖曳圈選 框線
+			selectionLineWidth:2, //拖曳圈選 框粗
+			selectionDashArray:[2,3],
+		});
+	
 
 		//編輯框的樣式
 		fabric.Object.prototype.set({
@@ -78,105 +96,38 @@
 			//cornerStyle: "circle" //編輯把手 圓形
 		});
 
-		myFabric.preserveObjectStacking = true; //維持元件堆疊的順序 預設false選到的會浮上來
-
-
-		//狗的群組 =======================
-		let dogBody = new fabric.Rect({
-			height: 50,
-			width: 100,
-			fill: '#DDAA00'
+		
+		let myRect = new fabric.Rect({
+			left: 50,
+			top: 50,
+			width: 120,
+			height: 150,
+			fill: "orange", //填色,
 		});
 
-		let dogHead = new fabric.Rect({
-			height: 50,
-			width: 50,
-			left: 80,
-			fill: '#ce9e00'
-		});
-
-		let dogEarL = new fabric.Triangle({
-			height: 30,
-			width: 30,
-			left: 70,
-			top: -20,
-			angle: -15,
-			fill: '#ce9e00'
-		});
-
-		dogEarR = new fabric.Triangle({
-			height: 30,
-			width: 30,
-			left: 110,
-			top: -25,
-			angle: 15,
-			fill: '#ce9e00'
-		});
+		myFabric.add(myRect);
+		myFabric.renderAll();
 
 		
-		let dogGroup = new fabric.Group([dogBody,dogHead,dogEarL,dogEarR], {
-			top: 100,
-			left: 100
-		});
-
-		//狗腿
-		for (let i = 0; i < 4; i++) {
-			dogGroup.add(new fabric.Rect({
-				height: 30,
-				width: 10,
-				fill: "darkred",
-				top: 30,
-				left:-70 + (30 * i)
-			}));
-		}
-
-		
-		// 建立我們組合好的 group
-		myFabric.add(dogGroup);
-
-
-
-		
-		//===========================
-		//群組
-		function fnGroup() {
-			myFabric.getActiveObject().toGroup();
-		}
-
-		//解開群組
-		function fnUnGroup() {
-			myFabric.getActiveObject().toActiveSelection();
-		}
-
-		$(".btn_group").click(function(){
-			fnGroup();
-		});
-
-		$(".btn_unGroup").click(function(){
-			fnUnGroup();
+		//是否可以編輯
+		$(".cb_hasControls").on("change", function(){
+			myRect.set({
+				hasControls:$(this).prop("checked"), 
+			});
+			myFabric.renderAll();
 		});
 
 
+		//是否可以選取
+		$(".cb_selectable").on("change", function(){
+			myRect.set({
+				selectable:$(this).prop("checked"), 
+			});
+			myFabric.renderAll();
+		});
 
+		//相同寫法 myRect.selectable = false;
 		
-		// //矩形
-		// let myRect = new fabric.Rect({
-		// 	left: 50,
-		// 	top: 80,
-		// 	width: 120,
-		// 	height: 150,
-		// 	opacity:.8, //透明度
-		// 	fill: "gold", //填色,
-		// 	stroke: "orangered",
-		// 	strokeWidth: 5,
-		// 	strokeDashArray:[10,5], //虛線
-		// });
-		// myFabric.add(myRect);
-
-		// $(".btn_1").click(function(){
-		// 	myRect.set({fill: "purple"});
-		// 	myFabric.requestRenderAll();
-		// });
 
 	});
 	</script>
