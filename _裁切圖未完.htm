@@ -53,17 +53,11 @@
 			<!--col_1 開始-->
 			<div class="col_1">
 
-				<!--縮圖列表 開始-->
-				<h3>已讀取圖片：</h3>
-				<div class="part_thumb"></div>
-				<!--縮圖列表 結束-->
-
 				<!--拖拉上傳模組 開始-->
 				<div class="dropOn">
 					<input id="myInputFile" multiple="true" name="files[]" type="file" />
 				</div>
 				<!--拖拉上傳模組 結束-->
-			
 				
 			</div>
 			<!--col_1 結束-->
@@ -87,7 +81,6 @@
 			width:414, //寬高
 			height:736, //寬高
 			backgroundColor: "yellowgreen", // 背景色
-			//backgroundImage: "https://placem.at/thing?w=414&h=736&txt=BG414x736&random=20", //背景圖片 會報錯
 		});
 
 		//編輯框的樣式
@@ -106,21 +99,33 @@
 			//cornerStyle: "circle" //編輯把手 圓形
 		});
 
-		//選取移到最上層
-		myFabric.on("selection:created", function(e) {
-			e.target.bringToFront();
+		myFabric.preserveObjectStacking = true; //維持元件堆疊的順序
+
+		//裁切框
+		let myCrop = new fabric.Rect({
+			width: 300,
+			height: 300,
+			fill: "rgb(255, 255, 255, .5)",
+			transparentCorners: false,
+			cornerColor: "#f00",
+			strokeWidth: 1,
+			cornerStrokeColor: "#000",
+			borderColor: "#000",
+			borderDashArray: [5, 5],
+			cornerStyle: "circle",
+			padding:0,//編輯框內距
+			//shadow: "0 0 5px #000",
 		});
 
-		//myFabric.preserveObjectStacking = false //維持元件堆疊的順序
+		myCrop.setControlVisible('mtr', false);//禁用旋轉
+		myFabric.centerObject(myCrop); //置中物件 
+		myFabric.add(myCrop);
+		myFabric.setActiveObject(myCrop); //裁切框設為選取
 
 
 		//批次讀取
 		function fnFileLoad(evt, cb) {
 			var files = evt.target.files; 
-			console.log(files[0].type.split("/")[1]); //類型
-			console.log(files[0].name); //原檔名
-			console.log(files[0].size); //檔案大小
-
 			console.log(files[0].type.match('image.*'));
 
 			if(files[0].type.match('image.*') === null){
@@ -136,10 +141,8 @@
 
 			//讀取完成
 			fr.onload = function(){
-				$(".part_thumb").append(`<img src="${fr.result}" title="檔名：${files[0].name}.${files[0].type.split("/")[1]} 大小：${files[0].size}Kb">`);
 				cb(fr.result); //callback
 			}
-			
 		}
 
 		//感應區
@@ -157,47 +160,25 @@
 		
 		//寫入照片
 		function fnDrawImg(argData64){
-
-			//裁切框
-			let userClipPath = new fabric.Rect({
-				width: 300,
-				height: 300,
-				fill: "rgb(255, 255, 255, 0.4)",
-				transparentCorners: false,
-				cornerColor: "#f00",
-				strokeWidth: 1,
-				cornerStrokeColor: "#000",
-				borderColor: "#000",
-				borderDashArray: [5, 5],
-				cornerStyle: "circle",
-				padding:0,//編輯框內距
-			});
-
-			myFabric.setActiveObject(userClipPath); //設為選取
-			myFabric.centerObject(userClipPath); //置中物件 
-			userClipPath.setControlVisible('mtr', false);//禁用旋轉
-			
-			myFabric.add(userClipPath);
 			
 			//照片元件
-			const elImg = document.createElement("img");
-			elImg.src = argData64;
+			const elPic = document.createElement("img");
+			elPic.src = argData64;
 			
-			elImg.onload = () => {
-				const myPic = new fabric.Image(elImg, {
+			elPic.onload = () => {
+				const myPic = new fabric.Image(elPic, {
 					left:0,
 					top:0,
 					originX: "center", 
        				originY: "center",
 					selectable:false, //禁選
-					hasControls:false//
+					hasControls:false //禁編輯
 				});
+				myFabric.add(myPic);
 				myFabric.centerObject(myPic); //置中物件 
 				myPic.scaleToWidth(myFabric.width); //等比縮放
-				myFabric.add(myPic);
+				myPic.sendToBack(); //置底
 			}
-			
-
 			
 		}
 	
