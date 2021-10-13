@@ -160,12 +160,18 @@
 
 		
 		//照片元件
+		let myPic;
 		function fnDrawImg(argData64){
+			//清掉舊圖
+			if(myPic){
+				myFabric.remove(myPic); 
+			}
+
 			let elPic = document.createElement("img");
 			elPic.src = argData64;
 			
 			elPic.onload = () => {
-				let myPic = new fabric.Image(elPic, {
+				myPic = new fabric.Image(elPic, {
 					left:0,
 					top:0,
 					originX: "center", 

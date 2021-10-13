@@ -25,22 +25,37 @@
 
 	#myCanvas{box-shadow:0px 0px 5px 0px rgba(0,0,0,0.5);  }
 
+
+	.imgGroup{ border:2px solid red; }
+	.imgGroup img{ display:block; width:200px; height:auto; margin:10px;   }
+
+	.imgGroup [draggable] {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			-khtml-user-drag: element;
+			-webkit-user-drag: element;
+			cursor: move;
+		}
+
 	</style>
 </head>
 <body>
 
-	<h1>選取 刪除 remove</h1>
-	<p>getActiveObject 單個。 (如果有多個算選到單個群組)</p>
-	<p>getActiveObjects 多個。 (陣列型態)</p>
-	
+	<h1>圖片 dom 元件 拖拉 插入 丟</h1>
+	<p>https://ithelp.ithome.com.tw/articles/10207087</p>
 
 	<!--gallery 開始-->
 		<div class="gallery">
 			<!--col_1 開始-->
 			<div class="col_1">
-				<button class="btn_1">刪單個 選取元件</button>
-				<button class="btn_2">刪多個 選取元件(建議)</button>
-				<button class="btn_3">清除整個畫布</button>
+				
+				<div class="imgGroup">
+					<img src="https://placem.at/thing?w=300&h=250&txt=38&random=38" draggable>
+					<img src="https://placem.at/thing?w=300&h=250&txt=20&random=20" draggable>
+					<img src="https://placem.at/thing?w=300&h=500&txt=17&random=17" draggable>
+				</div>
 			</div>
 			<!--col_1 結束-->
 	
@@ -80,53 +95,69 @@
 			//cornerStyle: "circle" //編輯把手 圓形
 		});
 
+		myFabric.preserveObjectStacking = true; //維持元件堆疊的順序 預設false選到的會浮上來
+
+
+		fabric.loadSVGFromURL("./images/Love_Heart_SVG.svg", (objects, options) => {
+					console.log(options);
+					let svgClip = fabric.util.groupSVGElements(objects, options);
+					svgClip.scaleToWidth(300);
+					svgClip.set({
+						left: 100,
+						top: 100,
+						stroke: "red",
+						strokeWidth: 5,
+						strokeDashArray: [5, 5],
+						fill: "orange",
+						selectable: false,
+						isClipFrame: true,
+					});
+					myFabric.add(svgClip).renderAll();
+				});
+
+
+
+		//目標物的座標及dom
+		let elTa = {
+			dom:null,
+			x:0,
+			y:0
+		}
+
 		
-		//矩形
-		let myRect = new fabric.Rect({
-			left: 50,
-			top: 80,
-			width: 120,
-			height: 150,
-			fill: "gold", //填色,
-			stroke: "orangered",
-			strokeWidth: 5,
-			strokeDashArray:[10,5], //虛線
-		});
-		myFabric.add(myRect);
+		//目標圖拖拉的位置
+		function fnTaPos(e) {
+			if (e.target.tagName.toLowerCase() === 'img') {
+				elTa.x = e.clientX - e.target.offsetLeft;
+				elTa.y = e.clientY - e.target.offsetTop;
+				elTa.dom = e.target;
+			}
+		}
 
 
-		//矩形
-		let myRect2 = new fabric.Rect({
-			left: 200,
-			top: 80,
-			width: 120,
-			height: 150,
-			fill: "skyblue", //填色,
-			stroke: "orangered",
-			strokeWidth: 5,
-			strokeDashArray:[10,5], //虛線
-		});
-		myFabric.add(myRect2);
-		myFabric.setActiveObject(myRect2); //設為選取
-
-
-		$(".btn_1").click(function(){
-			let ta = myFabric.getActiveObject();
-			myFabric.remove(ta);
-		});
-
-		$(".btn_2").click(function(){
-			let taList = myFabric.getActiveObjects();
-			taList.forEach(item => {
-				myFabric.remove(item);
+		//插入canvas
+		function fnDropTo(e) {
+			const { offsetX, offsetY } = e.e; //Fabric 拖拉後自帶的 event data
+			
+			const myPic = new fabric.Image(elTa.dom, {
+				width: elTa.dom.naturalWidth,
+				height: elTa.dom.naturalHeight,
+				top: offsetY - elTa.y,
+				left: offsetX - elTa.x
 			});
-			myFabric.discardActiveObject();
-		});
 
-		$(".btn_3").click(function(){
-			myFabric.clear().renderAll();
-		});
+			myPic.scaleToWidth(200);
 
+			myFabric.add(myPic);
+		}
+
+		
+		//丟
+		myFabric.on("drop", fnDropTo);
+
+		//按壓
+		$(".imgGroup").on("mousedown", fnTaPos);
+		
 
 	});
 	</script>
